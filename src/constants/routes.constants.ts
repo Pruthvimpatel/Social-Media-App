@@ -45,6 +45,12 @@ export const SETTING_ROUTES = {
     UPDATE_SETTING: '/notifications',
 };
 
+export const CHAT_ROUTES = {
+CREATE_CHAT_ROOM: '/create-chat-room',
+GET_CHAT_ROOM_MESSAGE: '/get-chat-room-message/:roomId',
+SEND_MESSAGE: '/send-message',
+};
+
 export const BASE_API_ROUTES = {
     USERS: '/users',
     POSTS: '/posts',
@@ -53,6 +59,7 @@ export const BASE_API_ROUTES = {
     TAGS: '/tags',
     LIKES: '/likes',
     SHARE_POST: '/share-posts',
+    CHAT: '/chats',
     SETTING:'/settings',
 };
 

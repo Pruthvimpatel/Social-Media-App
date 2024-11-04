@@ -17,7 +17,7 @@ import sharePostRoutes from './share-post.route';
 
 import settingRoutes from './setting.route';
 
-
+import chatRoutes from './chat.route';
 const router = Router();
 router.use(BASE_API_ROUTES.USERS, userRoutes);
 router.use(BASE_API_ROUTES.POSTS, postRoutes);
@@ -27,4 +27,5 @@ router.use(BASE_API_ROUTES.TAGS, tagRoutes);
 router.use(BASE_API_ROUTES.LIKES, likeRoutes);
 router.use(BASE_API_ROUTES.SHARE_POST, sharePostRoutes);
 router.use(BASE_API_ROUTES.SETTING, settingRoutes);
+router.use(BASE_API_ROUTES.CHAT, chatRoutes);
 export default router;

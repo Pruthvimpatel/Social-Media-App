@@ -26,6 +26,8 @@ export const ERROR_MESSAGE = {
     USER_NOT_FRIENDS: 'User not friends',
     PROFILE_UPLOAD_FAILED: 'Profile upload failed',
     INVALID_NOTIFICATION_SETTING: 'Invalid notification settings',
+    INVALID_USER_IDS_FORMAT: 'Invalid user ids format',
+    IMAGE_UPLOAD_FAILED: 'Image upload failed',
 };
 
 export const SUCCESS_MESSAGE = {
@@ -48,6 +50,9 @@ export const SUCCESS_MESSAGE = {
     POST_SHARED_SUCCESSFULLY: 'Post shared successfully',
     PROFILE_UPLOAD_SUCCESSFULLY: 'Profile upload successfully',
     NOTIFICATION_SETTING_UPDATED: 'Notification settings updated successfully',
+    CHAT_ROOM_CREATED_SUCCESSFULLY: 'Chat room created successfully',
+    CHAT_ROOM_MESSAGE_RETRIEVED_SUCCESSFULLY: 'Chat room messages retrieved successfully',
+    MESSAGE_SENT_SUCCESSFULLY: 'Message sent successfully',
 };
 
 

@@ -4,12 +4,14 @@ import ApiError from '../utils/api-error';
 import ApiResponse from '../utils/api-response';
 import asyncHandler from '../utils/async-handler';
 import db  from '../sequelize-client';
-import {generateAccessToken,generateRefreshToken,generateResetToken} from '../utils/jwt.token'
+import {generateAccessToken,generateRefreshToken} from '../utils/jwt.token'
 import encryption from '../utils/encryption';
 import User from '../models/user.model';
 import {ERROR_MESSAGE,SUCCESS_MESSAGE} from  '../constants/message';
 import { Op } from 'sequelize';
 import uploadOnCloudinary from '../utils/cloudinary';
+import redisClient from '../utils/redis-client';
+const VALID_PROFILE_VISIBILITIES = ['PRIVATE', 'FRIENDS_ONLY', 'PUBLIC'];
 
 interface MyUserRequest extends Request {
     token?: string;
@@ -143,31 +145,36 @@ export const logout  = asyncHandler(async(req:MyUserRequest,res:Response,next:Ne
  });
 
 //upload profile
-export const uploadProfile = asyncHandler(async (req:MyUserRequest,res: Response, next: NextFunction)=> {
-const profileImage = req.file?.path;
-console.log("profileImage",profileImage);
-const user = req.user;
-console.log(user);
-if(!user) {
-    return next(new ApiError(400,ERROR_MESSAGE.RECIPIENT_USER_NOT_FOUND));
-}
-if(!profileImage) {
-    return next(new ApiError(400,ERROR_MESSAGE.ALL_FIELDS_REQUIRED));
-}
-try {
-    const profile = await uploadOnCloudinary(profileImage);
-    if(!profile || !profile.url) {
-        return next(new ApiError(400,ERROR_MESSAGE.PROFILE_UPLOAD_FAILED))
+export const uploadProfile = asyncHandler(async (req:MyUserRequest,res: Response, next: NextFunction)=>{
+    const profileImage = req.file?.path;
+    const user = req.user;
+  
+    if(!user){
+      return next(new ApiError(404, ERROR_MESSAGE.USER_NOT_FOUND));
     }
-    user.profileImage = profile.url;
-    await user.save();
-     res.status(201).json({message:SUCCESS_MESSAGE.PROFILE_UPLOAD_SUCCESSFULLY});
-
-} catch(error) {
-    console.error(error);
-    return next(new ApiError(500,ERROR_MESSAGE.INTERNAL_SERVER_ERROR));
-}
-});
+    if(!profileImage){
+      throw new ApiError(400, ERROR_MESSAGE.ALL_FIELDS_REQUIRED);
+    }
+  
+    try {
+      const profile = await uploadOnCloudinary(profileImage);
+      if(!profile || !profile.url){
+        throw new ApiError(400, ERROR_MESSAGE.PROFILE_UPLOAD_FAILED);
+      }
+  
+      user.profileImage = profile.url;
+      await user.save();
+  
+      // Cache using Redis
+      await redisClient.set(`user:${user.id}`, JSON.stringify(user), 'EX', 3600);
+  
+      res.status(200).json(new ApiResponse(200, user, SUCCESS_MESSAGE.PROFILE_UPLOAD_SUCCESSFULLY));
+    } catch (error) {
+      console.error('Error in uploadProfile:', error);
+      return next(new ApiError(500, ERROR_MESSAGE.INTERNAL_SERVER_ERROR, [error]));
+    }
+    
+  });
 
 
 

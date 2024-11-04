@@ -7,6 +7,7 @@ import User from '../models/user.model';
 import {ERROR_MESSAGE,SUCCESS_MESSAGE} from  '../constants/message';
 import redis from '../utils/redis-client';
 import redisClient from '../utils/redis-client';
+import uploadOnCloudinary from '../utils/cloudinary';
 
 interface MyUserRequest extends Request {
     token?: string;

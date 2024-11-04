@@ -14,7 +14,11 @@ router.post(USER_ROUTES.LOGIN,validateReq(loginSchema),loginUser);
 
 router.post(USER_ROUTES.LOGOUT,verifyToken,logout);
 
-router.post(USER_ROUTES.UPLOAD_PROFILE,verifyToken,upload.single('profileImage'),uploadProfile);
-
+router.post(USER_ROUTES.UPLOAD_PROFILE,
+    verifyToken,
+    upload.single('profileImage'),
+    uploadProfile
+  );
+  
 
 export default router;
